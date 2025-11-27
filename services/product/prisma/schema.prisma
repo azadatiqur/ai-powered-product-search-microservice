@@ -1,0 +1,20 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  price       Float
+  category    String
+  images      String[]  @default([])
+  embedding   Json?     // store embeddings as JSON for now
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
