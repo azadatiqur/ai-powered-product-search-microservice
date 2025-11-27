@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { prisma } from './db'
 import { ProductDTO } from './models'
+import { publishProductCreated } from './rabbitmq'
 
 export const router = Router()
 
@@ -11,6 +12,14 @@ router.post('/products', async (req, res) => {
   try {
     const data = req.body as ProductDTO
     const product = await prisma.product.create({ data })
+
+    // Publish event to RabbitMQ
+    publishProductCreated({
+      id: product.id,
+      title: product.title,
+      description: product.description
+    })
+
     res.status(201).json(product)
   } catch (err) {
     console.error(err)
