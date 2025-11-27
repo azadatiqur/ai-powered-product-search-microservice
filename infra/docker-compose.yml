@@ -43,5 +43,18 @@ services:
         condition: service_healthy
     restart: on-failure
 
+  search-service:
+    build:
+      context: ../services/search
+    env_file:
+      - ../services/search/.env
+    ports:
+      - "8003:8003"
+    depends_on:
+      - postgres
+      - redis
+    restart: on-failure
+
+
 volumes:
   pgdata:
